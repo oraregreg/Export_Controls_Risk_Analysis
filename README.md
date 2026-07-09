@@ -148,7 +148,7 @@ Many defects were hidden within otherwise legitimate addresses (e.g., "123 Corpo
 * Medium-term: Provide targeted training to data entry teams in high-risk business units (60 days)
 * Long-term: Implement real-time OFAC screening API integration (90 days)
 
-**[📁 View Full Code →](Risk_Layer_1_address_screening.ipynb)**
+**[📁 View Full Code →](notebooks/Risk_Layer_1_address_screening.ipynb)**
 
 
 ### Risk Layer 2: Foreign Direct Product Rule (FDPR) Auditing
@@ -269,7 +269,7 @@ Visualization:
 - **Medium-term**: Conduct compliance training for product classification teams, especially US-ConsumerElectronics (60 days)
 - **Long-term**: Implement real-time FDPR screening with automated holds for high-risk combinations (90 days)
 
-**[📁 View Full Code →](Risk_Layer_2_fdpr_auditing.ipynb)**
+**[📁 View Full Code →](notebooks/Risk_Layer_2_fdpr_auditing.ipynb)**
 
 ### Risk Layer 3: EEI Threshold Validation
 
@@ -387,7 +387,7 @@ df['eei_filing_required'] = (
 
 - **Long-term**: Integrate EEI filing status into shipping system with automated holds for non-compliant shipments (90 days)
 
-**[📁 View Full Code →](Risk_Layer_3_eei_threshold.ipynb)**
+**[📁 View Full Code →](notebooks/Risk_Layer_3_eei_threshold.ipynb)**
 
 
 ### Risk Layer 4: PGA Approval Validation
@@ -502,7 +502,7 @@ df['pga_compliance_failure'] = (
 
 - **Long-term**: Integrate PGA approval verification into shipping system with automated holds for non-compliant shipments (90 days)
 
-📁 **[View Full Code →](Risk_Layer_4_pga_license.ipynb)**
+	**[📁 View Full Code →](notebooks/Risk_Layer_4_pga_license.ipynb)**
 
 ### Risk Layer 5: License Validation
 
@@ -620,7 +620,7 @@ df['license_validation_failure'] = (
 
 - **Long-term**: Integrate license verification into shipping system with automated holds for shipments without valid licenses (90 days)
 
-📁 **[View Full Code →](Risk_Layer_5_License_Validation.ipynb)**
+**[📁 View Full Code →](notebooks/Risk_Layer_5_License_Validation.ipynb)**
 ---
 
 ## Summary: All Five Risk Layers
