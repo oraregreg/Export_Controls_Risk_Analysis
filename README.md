@@ -50,22 +50,37 @@ Following a warning letter from the Bureau of Industry and Security (BIS), Apex 
 
 ---
 ### 2.2 Project Structure
+
+```
+Export_Controls_Project/
 │
 ├── notebooks/
-│ ├── Risk_Layer_1_address_screening.ipynb
-│ ├── Risk_Layer_2_fdpr_auditing.ipynb
-│ ├── Risk_Layer_3_eei_threshold.ipynb
-│ ├── Risk_Layer_4_pga_license.ipynb
-│ ├── Risk_Layer_5_License_Validation.ipynb
-│ └── generate_export_data.ipynb
+│   ├── Risk_Layer_1_address_screening.ipynb
+│   ├── Risk_Layer_2_fdpr_auditing.ipynb
+│   ├── Risk_Layer_3_eei_threshold.ipynb
+│   ├── Risk_Layer_4_pga_license.ipynb
+│   ├── Risk_Layer_5_License_Validation.ipynb
+│   └── generate_export_data.ipynb
+│
 ├── output/
-│ ├── risk_layer1_address_screening.png
-│ ├── risk_layer2_fdpr_auditing.png
-│ ├── risk_layer3_eei_threshold.png
-│ └── risk_layer4_pga_approval.png
+│   ├── risk_layer1_address_screening.png
+│   ├── risk_layer2_fdpr_auditing.png
+│   ├── risk_layer3_eei_threshold.png
+│   ├── risk_layer4_pga_approval.png
+│   ├── insight1_demurrage_analysis.png
+│   ├── insight2_address_defects.png
+│   ├── insight3_fdpr_exposure.png
+│   └── insight4_license_integrity.png
+│
 ├── README.md
 ├── .gitignore
-└── [data CSV files]
+├── us_export_compliance_data.csv
+├── us_export_compliance_data_layer1.csv
+├── us_export_compliance_data_layer2.csv
+├── us_export_compliance_data_layer3.csv
+├── us_export_compliance_data_layer4.csv
+└── us_export_compliance_data_with_risk.csv
+```
 
 
 ## 3. Risk Detection Framework
