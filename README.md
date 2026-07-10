@@ -2,8 +2,6 @@
 
 ## Table of Contents
 
-## Table of Contents
-
 1. [Introduction](#1-introduction)
    - 1.1 [Business Context](#11-business-context)
    - 1.2 [Main Question](#12-main-question)
