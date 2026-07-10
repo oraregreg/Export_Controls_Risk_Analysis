@@ -1,0 +1,8 @@
+port_of_exit,total_shipments,total_leakage_usd,avg_clearance_hours,max_clearance_hours,min_clearance_hours,avg_excess_hours
+MIAMI,715,1158900,55.57,118,12,32.42
+NEWARK,712,1099650,53.9,118,12,30.89
+LOS ANGELES,722,684200,41.54,71,12,18.95
+HOUSTON,713,679800,41.77,71,12,19.07
+SEATTLE,722,673200,41.32,71,12,18.65
+NEW YORK,717,662700,41.28,71,12,18.49
+CHICAGO O'HARE,699,640750,40.89,71,12,18.33

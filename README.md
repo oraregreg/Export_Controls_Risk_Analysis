@@ -1,22 +1,42 @@
 # U.S. Export Compliance Risk Analysis Framework
 
-## Overview
+## Table of Contents
+
+1. [Introduction](#1-introduction)
+   - 1.1 [Business Context](#11-business-context)
+   - 1.2 [Main Question](#12-main-question)
+2. [Technical Implementation](#2-technical-implementation)
+   - 2.1 [Technology Stack](#21-technology-stack)
+   - 2.2 [Project Structure](#22-project-structure)
+3. [Risk Detection Framework](#3-risk-detection-framework)
+   - 3.1 [Risk Layer 1: Address-String Screening](#31-risk-layer-1-address-string-screening)
+   - 3.2 [Risk Layer 2: FDPR Auditing](#32-risk-layer-2-fdpr-auditing)
+   - 3.3 [Risk Layer 3: EEI Threshold Validation](#33-risk-layer-3-eei-threshold-validation)
+   - 3.4 [Risk Layer 4: PGA Approval Validation](#34-risk-layer-4-pga-approval-validation)
+   - 3.5 [Risk Layer 5: License Validation](#35-risk-layer-5-license-validation)
+   - 3.6 [Summary: All Five Risk Layers](#36-summary-all-five-risk-layers)
+4. [Descriptive Analytics (Coming Soon)](#4-descriptive-analytics-coming-soon)
+5. [Conclusion](#5-conclusion)
+
+---
+
+## 1. Introduction
 
 An end-to-end risk detection framework for analyzing U.S. export shipments, identifying compliance violations across five key regulatory risk layers. This project simulates a real-world export compliance audit for "Apex Global Tech," a U.S.-based technology manufacturer with global operations.
 
-### Business Context
+### 1.1 Business Context
 
 Following a warning letter from the Bureau of Industry and Security (BIS), Apex Global Tech's CEO mandated a comprehensive review of all export shipments. The company processes thousands of exports annually, but fragmented compliance systems have created significant risk exposure.
 
-### Main Question
+### 1.2 Main Question
 
 > *"What are the most critical compliance and operational risks in our U.S. export supply chain, and how can we quantify their financial and operational impact?"*
 
 ---
 
-## Technical Implementation
+## 2. Technical Implementation
 
-### Technology Stack
+### 2.1 Technology Stack
 
 | Tool | Purpose |
 |------|---------|
@@ -29,8 +49,26 @@ Following a warning letter from the Bureau of Industry and Security (BIS), Apex 
 | **VS Code** | Development environment |
 
 ---
+### 2.2 Project Structure
+│
+├── notebooks/
+│ ├── Risk_Layer_1_address_screening.ipynb
+│ ├── Risk_Layer_2_fdpr_auditing.ipynb
+│ ├── Risk_Layer_3_eei_threshold.ipynb
+│ ├── Risk_Layer_4_pga_license.ipynb
+│ ├── Risk_Layer_5_License_Validation.ipynb
+│ └── generate_export_data.ipynb
+├── output/
+│ ├── risk_layer1_address_screening.png
+│ ├── risk_layer2_fdpr_auditing.png
+│ ├── risk_layer3_eei_threshold.png
+│ └── risk_layer4_pga_approval.png
+├── README.md
+├── .gitignore
+└── [data CSV files]
 
-## Risk Detection Framework
+
+## 3. Risk Detection Framework
 
 ### The Five Risk Layers
 
@@ -44,7 +82,7 @@ Following a warning letter from the Bureau of Industry and Security (BIS), Apex 
 
 ---
 
-### Risk Layer 1: Address-String Screening
+### 3.1 Risk Layer 1: Address-String Screening
 
 **Purpose**: Identify hidden sanctioned locations in consignee addresses
 
@@ -151,7 +189,7 @@ Many defects were hidden within otherwise legitimate addresses (e.g., "123 Corpo
 **[📁 View Full Code →](notebooks/Risk_Layer_1_address_screening.ipynb)**
 
 
-### Risk Layer 2: Foreign Direct Product Rule (FDPR) Auditing
+### 3.2 Risk Layer 2: Foreign Direct Product Rule (FDPR) Auditing
 
 **Purpose**: Identify items subject to US jurisdiction under FDPR
 
@@ -271,7 +309,7 @@ Visualization:
 
 **[📁 View Full Code →](notebooks/Risk_Layer_2_fdpr_auditing.ipynb)**
 
-### Risk Layer 3: EEI Threshold Validation
+### 3.3 Risk Layer 3: EEI Threshold Validation
 
 **What is EEI?**
 
@@ -390,7 +428,7 @@ df['eei_filing_required'] = (
 **[📁 View Full Code →](notebooks/Risk_Layer_3_eei_threshold.ipynb)**
 
 
-### Risk Layer 4: PGA Approval Validation
+### 3.4 Risk Layer 4: PGA Approval Validation
 
 **What is PGA?**
 
@@ -504,7 +542,7 @@ df['pga_compliance_failure'] = (
 
 	**[📁 View Full Code →](notebooks/Risk_Layer_4_pga_license.ipynb)**
 
-### Risk Layer 5: License Validation
+### 3.5 Risk Layer 5: License Validation
 
 **What is License Validation?**
 
@@ -623,7 +661,7 @@ df['license_validation_failure'] = (
 **[📁 View Full Code →](notebooks/Risk_Layer_5_License_Validation.ipynb)**
 ---
 
-## Summary: All Five Risk Layers
+### 3.6 Summary: All Five Risk Layers
 
 | Layer | Risk Type | Defect Rate | Key Finding |
 |-------|-----------|-------------|-------------|
@@ -632,5 +670,371 @@ df['license_validation_failure'] = (
 | **Layer 3** | EEI Threshold | 44.22% | 2,211 NLR shipments missing EEI filing |
 | **Layer 4** | PGA Approval | 2.30% | 115 shipments missing PGA approval |
 | **Layer 5** | License Validation | 2.30% | 115 shipments with invalid licenses |
+
+---
+
+### 4.1 Financial Liability - Demurrage Leakage
+
+**What We're Analyzing**
+
+**Core Question**: Which transit hubs generate the highest accrued demurrage?
+
+**Why This Matters**: When shipments are delayed at ports, demurrage fees accrue - these are penalty charges for containers sitting beyond the free time. Understanding where these costs accumulate helps optimize logistics strategy.
+
+**Key Metric**: Port delay metrics exceeding the standard 24-hour corporate SLA
+
+**Calculation**:
+
+- `excess_delay_hours` = (clearance_hours - 24) [only if positive]
+- `accrued_demurrage_usd` = excess_delay_hours × $50/hour penalty
+
+**Code Snippet**:
+```python
+# Calculate demurrage costs
+SLA_THRESHOLD = 24  # Standard 24-hour SLA
+HOURLY_PENALTY = 50  # $50/hour penalty
+
+# Calculate excess delay hours
+df['excess_delay_hours'] = (df['clearance_hours'] - SLA_THRESHOLD).clip(lower=0)
+df['accrued_demurrage_usd'] = df['excess_delay_hours'] * HOURLY_PENALTY
+```
+**Visualization**:
+
+![Demurrage Analysis](output/insight1_demurrage_analysis.png)
+
+**Summary of Key Findings**:
+
+| Metric | Value |
+|--------|-------|
+| **Total Demurrage** | $5,599,200 |
+| **Delay Rate** | 79.76% |
+| **Worst Port** | MIAMI ($1.16M, 55.6 hrs avg) |
+| **Best Port** | CHICAGO O'HARE ($640,750, 40.9 hrs avg) |
+| **Worst Business Unit** | US-ConsumerElectronics ($1.76M) |
+| **Peak Month** | May 2026 ($493,850) |
+
+**Key Insights**:
+
+- **Port Concentration**: MIAMI accounts for 20.7% of total demurrage costs ($1.16M) despite handling only 14.3% of shipments. With an average clearance time of 55.6 hours (31.6 hours beyond SLA), this port represents the single largest area for improvement.
+
+- **Significant Financial Impact**: Total demurrage of $5.6M across all shipments represents a substantial operational cost. With 79.76% of shipments delayed beyond the 24-hour SLA, this is a company-wide issue requiring systemic solutions.
+
+- **Business Unit Variance**: US-ConsumerElectronics has the highest demurrage costs at $1.76M, representing 31.5% of total demurrage. This aligns with their high shipment volume and suggests supply chain inefficiencies in this division.
+
+- **Port Performance Gap**: A clear divide exists between high-performing ports (CHICAGO O'HARE, NEW YORK, SEATTLE with ~41 hours clearance) and underperforming ports (MIAMI, NEWARK with ~55 hours clearance). Routing through efficient ports could yield significant savings.
+
+- **Monthly Trends**: Demurrage costs peaked in May 2026 at $493,850. The declining trend in June and July may indicate seasonal factors or recent process improvements that should be investigated.
+
+**[📁 View Full Code →](notebooks\descriptive_analytics_financial_demurrage.ipynb)**
+
+### 4.2 Operational Vulnerability - Address Defect Rate
+
+**What We're Analyzing**
+
+**Core Question**: Which divisions submit the highest rate of unverified addresses?
+
+**Why This Matters**: Address defects indicate data quality issues that can lead to sanctions violations, shipment delays, and regulatory penalties. Identifying which business units have the highest defect rates helps target training and process improvements.
+
+**Key Metric**: Percentage of shipments with address red flags by business unit
+
+**The Problem**: Automated screening software can fail if it checks the corporate entity's name but misses a restricted destination hidden in a messy, unstructured text field.
+
+**Code Snippet**:
+```python
+# Aggregate address defects by business unit
+exporter_risk = df.groupby('exporter_business_unit').agg({
+    'shipment_id': 'count',
+    'address_red_flag': 'sum'
+}).reset_index()
+
+exporter_risk['address_defect_rate_pct'] = (
+    (exporter_risk['address_red_flags'] / exporter_risk['total_exports']) * 100
+).round(2)
+```
+**Visualization**:
+
+![Address Defect Analysis](output/insight2_address_defects.png)
+
+**Summary of Key Findings**:
+
+| Metric | Value |
+|--------|-------|
+| **Total Address Red Flags** | 101 shipments |
+| **Overall Defect Rate** | 2.02% |
+| **Worst Business Unit** | US-ConsumerElectronics (2.72%) |
+| **Worst Country** | NORTH KOREA (41 defects, 40.6%) |
+| **Peak Month** | July 2026 (5.38%) |
+
+**Key Insights**:
+
+- **Business Unit Concentration**: US-ConsumerElectronics accounts for 42.6% of all address defects (43 out of 101) despite having only 31.6% of total shipments. This indicates a systematic data entry or validation problem in this division.
+
+- **Hidden Sanctions Risk**: Defects are concentrated in North Korea, Crimea, and Syria - all under strict US sanctions. The fact that these addresses appeared suggests name-only screening was insufficient.
+
+- **Monthly Volatility**: Defect rates vary significantly month-to-month, from 0.76% to 5.38%. The July 2026 spike (5.38%) warrants investigation - was there a new employee, system change, or process breakdown?
+
+- **Address Masking Pattern**: Many defects were hidden within otherwise legitimate addresses (e.g., "123 Corporate Blvd, Dublin, IE, PYONGYANG, NORTH KOREA"), demonstrating that simple keyword filtering would miss these violations.
+
+- **Overall Data Quality Issue**: With 2.02% of all shipments containing address defects, this represents a significant operational risk that requires systemic solutions rather than one-off fixes.
+
+**[📁 View Full Code →](notebooks\descriptive_analytics_address_defects.ipynb)**
+
+### 4.3 Regulatory Exposure - FDPR Matrix
+
+**What We're Analyzing**
+
+**Core Question**: What is our financial exposure under FDPR boundaries?
+
+**Why This Matters**: The Foreign Direct Product Rule (FDPR) creates severe exposure for technology and medical device companies manufacturing abroad. Identifying which products and destinations are at risk helps prioritize compliance resources.
+
+**Key Metric**: Non-U.S. manufactured items utilizing U.S. tooling and software, mapped against destination countries and ECCN codes
+
+**Code Snippet**:
+```python
+# Filter to FDPR jurisdiction items
+fdpr_dataset = df[df['fdpr_jurisdiction_flag'] == True]
+
+# Group by ECCN and consignee country
+eccn_exposure = fdpr_dataset.groupby(['eccn', 'consignee_country']).agg({
+    'shipment_id': 'count',
+    'total_value_usd': 'sum'
+})
+```
+**Visualization**:
+
+![FDPR Exposure Matrix](output/insight3_fdpr_exposure.png)
+
+**Summary of Key Findings**:
+
+| Metric | Value |
+|--------|-------|
+| **Total FDPR Financial Exposure** | $821,528,751.67 |
+| **Total FDPR Shipments** | 1,293 shipments |
+| **Worst Country** | Belgium (BE) - $116.3M (14.2%) |
+| **Worst ECCN** | EAR99 - $390.3M (47.5%) |
+| **Top Risk Combination** | EAR99 → Mexico ($55.96M, 79 shipments) |
+
+**Analysis by Destination Country**:
+
+| Country | Shipments | Total Exposure | % of Total |
+|---------|-----------|----------------|------------|
+| Belgium (BE) | 166 | $116,305,560 | 14.2% |
+| Ireland (IE) | 183 | $115,959,000 | 14.1% |
+| Singapore (SG) | 158 | $101,053,400 | 12.3% |
+| Saudi Arabia (SA) | 160 | $100,099,400 | 12.2% |
+| Mexico (MX) | 153 | $97,374,190 | 11.9% |
+| India (IN) | 150 | $92,375,710 | 11.2% |
+| China (CN) | 143 | $90,947,760 | 11.1% |
+| Taiwan (TW) | 148 | $85,071,220 | 10.4% |
+| Crimea | 8 | $6,306,544 | 0.8% |
+| Iran | 9 | $6,096,984 | 0.7% |
+
+**Analysis by ECCN Code**:
+
+| ECCN | Shipments | Total Exposure | % of Total |
+|------|-----------|----------------|------------|
+| EAR99 | 614 | $390,275,400 | 47.5% |
+| 5A002 | 233 | $155,624,500 | 18.9% |
+| 3A001 | 190 | $118,617,200 | 14.4% |
+| 5A001 | 123 | $81,351,080 | 9.9% |
+| 9A004 | 133 | $75,660,610 | 9.2% |
+
+**Top 10 Highest-Risk Combinations (ECCN × Country)**:
+
+| ECCN | Country | Shipments | Exposed Value |
+|------|---------|-----------|---------------|
+| EAR99 | MX | 79 | $55,961,435.63 |
+| EAR99 | IE | 85 | $53,636,808.43 |
+| EAR99 | SG | 83 | $50,907,240.00 |
+| EAR99 | BE | 74 | $50,290,582.62 |
+| EAR99 | SA | 77 | $46,599,683.49 |
+| EAR99 | CN | 69 | $45,138,492.80 |
+| EAR99 | IN | 68 | $43,682,096.73 |
+| EAR99 | TW | 66 | $35,607,299.16 |
+| 5A002 | BE | 33 | $25,628,100.43 |
+| 5A002 | CN | 29 | $21,577,590.74 |
+
+**Key Insights**:
+
+- **Massive Regulatory Exposure**: $821.5 million in products are under FDPR jurisdiction. This represents significant regulatory risk requiring immediate attention.
+
+- **Belgium Concentration**: Belgium accounts for 14.2% of total FDPR exposure ($116.3M). This is the single largest country risk, despite not having the highest shipment volume.
+
+- **EAR99 Dominance**: 47.5% ($390.3M) of FDPR exposure is classified as EAR99. These items are being treated as "No License Required" but are actually under US jurisdiction due to FDPR rules.
+
+- **Controlled Technology Risk**: 5A002 (telecom/encryption) represents $155.6M in exposure, followed by 3A001 (electronics) at $118.6M. These are highly controlled items requiring proper licensing.
+
+- **Geographic Diversification**: Exposure is spread across 8 countries each exceeding $85M, indicating this is a global supply chain issue requiring systemic solutions.
+
+- **Sanctions Red Flags**: Crimea ($6.3M) and Iran ($6.1M) appear in FDPR exposure, representing dual regulatory and sanctions risk requiring immediate investigation.
+
+**[📁 View Full Code →](notebooks\descriptive_analytics_fdpr_matrix.ipynb)**
+
+### 4.4 Transactional Integrity - License vs Value Discrepancy
+
+**What We're Analyzing**
+
+**Core Question**: Are line items over $2,500 executing mandatory EEI filings?
+
+**Why This Matters**: U.S. export regulations mandate that any single line item valued over $2,500 classified under NLR must file Electronic Export Information (EEI) through the Automated Export System (AES). This analysis checks for value-threshold omissions before they spark regulatory audits.
+
+**Key Metric**: Percentage of shipments exceeding $2,500 under NLR with zero license verification
+
+**Code Snippet**:
+```python
+# Calculate EEI threshold violations
+EEI_THRESHOLD = 2500
+df['eei_filing_required'] = (
+    (df['total_value_usd'] > EEI_THRESHOLD) & 
+    (df['license_type'] == 'NLR')
+)
+```
+**Visualization**:
+
+![License Integrity Analysis](output/insight4_license_integrity.png)
+
+**Summary of Key Findings**:
+
+| Metric | Value |
+|--------|-------|
+| **Total EEI Violations** | 2,211 shipments |
+| **NLR Defect Rate** | 99.68% |
+| **Total Value at Risk** | $1,417,623,062.12 |
+| **Worst Business Unit** | US-ConsumerElectronics (693 violations) |
+| **Worst Port** | MIAMI (45.59% violation rate) |
+| **Peak Month** | March 2026 (47.01%) |
+
+**Analysis by License Type**:
+
+| License Type | Total Shipments | EEI Violations | Violation Rate |
+|--------------|-----------------|----------------|----------------|
+| NLR | 2,218 | 2,211 | **99.68%** |
+| LICENSE | 1,789 | 0 | 0.00% |
+| EXCEPTION | 993 | 0 | 0.00% |
+
+**Key Finding**: 99.68% of all NLR shipments exceed the $2,500 threshold and require EEI filing!
+
+**Analysis by Business Unit**:
+
+| Business Unit | Total Shipments | EEI Violations | Violation Rate |
+|---------------|-----------------|----------------|----------------|
+| US-AerospaceParts | 735 | 332 | 45.17% |
+| US-MedicalDevices | 1,239 | 557 | 44.96% |
+| US-Pharmaceuticals | 478 | 213 | 44.56% |
+| US-ConsumerElectronics | 1,582 | 693 | 43.81% |
+| US-IndustrialEquipment | 966 | 416 | 43.06% |
+
+**Analysis by Port of Exit**:
+
+| Port of Exit | Total Shipments | EEI Violations | Violation Rate |
+|--------------|-----------------|----------------|----------------|
+| MIAMI | 715 | 326 | 45.59% |
+| HOUSTON | 713 | 321 | 45.02% |
+| SEATTLE | 722 | 325 | 45.01% |
+| LOS ANGELES | 722 | 323 | 44.74% |
+| CHICAGO O'HARE | 699 | 306 | 43.78% |
+| NEWARK | 712 | 307 | 43.12% |
+| NEW YORK | 717 | 303 | 42.26% |
+
+**Monthly Trend** (Last 6 months):
+
+| Month | Violation Rate |
+|-------|----------------|
+| 2026-02 | 42.78% |
+| 2026-03 | 47.01% |
+| 2026-04 | 44.25% |
+| 2026-05 | 42.53% |
+| 2026-06 | 42.20% |
+| 2026-07 | 41.94% |
+
+**Key Insights**:
+
+- **Systemic Filing Failure**: 99.68% of all NLR shipments exceed the $2,500 threshold. This means virtually every NLR shipment requires EEI filing, but the system is not enforcing this requirement.
+
+- **Massive Financial Exposure**: $1.42 billion in shipments are at risk of EEI violations. This represents a significant regulatory exposure that could result in substantial penalties.
+
+- **Consistent Pattern Across Business Units**: All business units have violation rates between 43-45%, indicating this is a company-wide systemic issue rather than isolated errors.
+
+- **Port-Level Consistency**: EEI violation rates are remarkably consistent across all ports (42-46%), suggesting the issue is with the shipping system/process rather than specific port operations.
+
+- **Stable Trend**: Violation rates have remained consistently high (41-47%) over the 12-month period, indicating this is a chronic, unresolved compliance gap.
+
+**[📁 View Full Code →](notebooks\descriptive_analytics_license_integrity.ipynb)**
+
+## 5. Conclusion
+
+This risk detection framework successfully identified five key compliance risk layers and four descriptive analytics insights across U.S. export operations.
+
+### Summary of All Risk Layers
+
+| Layer | Risk Type | Defect Rate | Key Finding |
+|-------|-----------|-------------|-------------|
+| **Layer 1** | Address Screening | 2.02% | 101 shipments with hidden sanctioned addresses |
+| **Layer 2** | FDPR Auditing | 13.58% | $431M in misclassified controlled items |
+| **Layer 3** | EEI Threshold | 44.22% | 2,211 NLR shipments missing EEI filing |
+| **Layer 4** | PGA Approval | 2.30% | 115 shipments missing PGA approval |
+| **Layer 5** | License Validation | 2.30% | 115 shipments with invalid licenses |
+
+### Summary of Descriptive Analytics Insights
+
+| Insight | Key Finding | Financial Impact |
+|---------|-------------|------------------|
+| **4.1 Demurrage Leakage** | MIAMI worst port (55.6 hrs avg) | $5.6M total demurrage |
+| **4.2 Address Defects** | US-ConsumerElectronics highest defect rate (2.72%) | 101 shipments at risk |
+| **4.3 FDPR Exposure** | $821.5M under FDPR jurisdiction | Belgium highest exposure ($116.3M) |
+| **4.4 License Integrity** | 99.68% NLR shipments exceed $2,500 threshold | $1.42B at risk |
+
+### Top 5 Critical Findings
+
+1. **EEI Filing Failure**: 99.68% of NLR shipments exceed the $2,500 threshold without proper EEI filing. This represents the single largest compliance gap with $1.42B in at-risk shipments.
+
+2. **FDPR Misclassification**: $821.5M in products are under FDPR jurisdiction but being treated as uncontrolled. This represents significant regulatory exposure requiring immediate attention.
+
+3. **Port Performance Gap**: MIAMI and NEWARK have average clearance times of 55+ hours (31+ hours beyond SLA), generating $2.26M in combined demurrage costs.
+
+4. **Address Data Quality**: 101 shipments contain hidden sanctioned locations, with US-ConsumerElectronics accounting for 42.6% of all address defects.
+
+5. **Systemic Issues**: All risk layers show consistent patterns across business units and ports, indicating these are systemic process failures rather than isolated errors.
+
+### Total Financial Exposure
+
+| Risk Category | Exposure |
+|---------------|----------|
+| **FDPR Misclassification** | $821,528,751.67 |
+| **EEI Filing Violations** | $1,417,623,062.12 |
+| **Demurrage Costs** | $5,599,200.00 |
+| **PGA & License Failures** | $67,878,591.13 |
+| **Total Exposure** | **$2,312,629,604.92** |
+
+### Key Recommendations
+
+**Immediate Actions (1-2 weeks)**:
+- Review all 2,211 EEI violations and file required documentation
+- Review all 679 FDPR misclassified shipments and validate ECCN classifications
+- Review all 101 address red flags and validate consignee addresses
+
+**Short-term Actions (30 days)**:
+- Implement automated pre-shipment validation for NLR shipments >$2,500
+- Deploy automated address validation for US-ConsumerElectronics
+- Implement automated FDPR detection in shipping database
+
+**Medium-term Actions (60 days)**:
+- Provide targeted compliance training to high-risk business units
+- Review and update EEI filing procedures
+- Conduct compliance audit for 5A002 and 3A001 classified items
+
+**Long-term Actions (90 days)**:
+- Implement real-time OFAC screening API integration
+- Integrate EEI filing status verification with automated holds
+- Monthly port performance reviews with escalation procedures
+
+### Next Steps
+
+- Predictive Analytics - ML-based risk scoring for shipments
+- API Integration - Real-time Consolidated Screening List (CSL) integration
+- Dashboard Development - Interactive Power BI compliance monitoring
+
+
+**📝 License**: This project is for **educational and portfolio purposes only**. All data is synthetic.
 
 ---
