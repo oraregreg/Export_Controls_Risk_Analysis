@@ -748,7 +748,7 @@ df['accrued_demurrage_usd'] = df['excess_delay_hours'] * HOURLY_PENALTY
 
 - **Monthly Trends**: Demurrage costs peaked in May 2026 at $493,850. The declining trend in June and July may indicate seasonal factors or recent process improvements that should be investigated.
 
-**[📁 View Full Code →](notebooks\descriptive_analytics_financial_demurrage.ipynb)**
+**[📁 View Full Code →](notebooks/descriptive_analytics_financial_demurrage.ipynb)**
 
 ### 4.2 Operational Vulnerability - Address Defect Rate
 
@@ -800,7 +800,7 @@ exporter_risk['address_defect_rate_pct'] = (
 
 - **Overall Data Quality Issue**: With 2.02% of all shipments containing address defects, this represents a significant operational risk that requires systemic solutions rather than one-off fixes.
 
-**[📁 View Full Code →](notebooks\descriptive_analytics_address_defects.ipynb)**
+**[📁 View Full Code →](notebooks/descriptive_analytics_address_defects.ipynb)**
 
 ### 4.3 Regulatory Exposure - FDPR Matrix
 
@@ -891,7 +891,7 @@ eccn_exposure = fdpr_dataset.groupby(['eccn', 'consignee_country']).agg({
 
 - **Sanctions Red Flags**: Crimea ($6.3M) and Iran ($6.1M) appear in FDPR exposure, representing dual regulatory and sanctions risk requiring immediate investigation.
 
-**[📁 View Full Code →](notebooks\descriptive_analytics_fdpr_matrix.ipynb)**
+**[📁 View Full Code →](notebooks/descriptive_analytics_fdpr_matrix.ipynb)**
 
 ### 4.4 Transactional Integrity - License vs Value Discrepancy
 
@@ -982,7 +982,7 @@ df['eei_filing_required'] = (
 
 - **Stable Trend**: Violation rates have remained consistently high (41-47%) over the 12-month period, indicating this is a chronic, unresolved compliance gap.
 
-**[📁 View Full Code →](notebooks\descriptive_analytics_license_integrity.ipynb)**
+**[📁 View Full Code →](notebooks/descriptive_analytics_license_integrity.ipynb)**
 
 ## 5. Conclusion
 
